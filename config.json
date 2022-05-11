@@ -1,0 +1,5 @@
+{
+    "text_data_path":"/home/ruben/Documents/phd-cache",
+    "stopword_path":"/home/ruben/Documents/GitHub/PhD/Research/data-curation/resources/parl-stopwords.txt",
+    "pos_path":"/home/ruben/Documents/GitHub/PhD/Research/case-entities/data/pos.json"
+}
