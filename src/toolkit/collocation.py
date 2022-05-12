@@ -7,7 +7,7 @@ import re
 
 class Collocation():
 
-    def __init__(self,data,measure='pmi',window=5,freq_filter=50):
+    def __init__(self,data,text_column='',measure='pmi',window=5,freq_filter=50):
 
         """
         data (list): list of strings.
@@ -17,25 +17,27 @@ class Collocation():
         """
 
         self.data = data 
+        self.data = self.data[self.data.lemm_cleaned.str.split(' ').str.len() > 1]
+        self.data = [[w for w in t.split(' ') if w not in [' ','','[s]']] for t in self.data[text_column]]
         self.window = window 
         self.freq_filter = freq_filter
         self.measure = eval(f"BigramAssocMeasures.{measure}")
+        self.BigramCollocationFinder = BigramCollocationFinder
 
     def find_collocates(self):
-        BigramCollocationFinder.default_ws = self.window
-        self.finder = BigramCollocationFinder.from_documents(self.data)
+        self.BigramCollocationFinder.default_ws = self.window
+        self.finder = self.BigramCollocationFinder.from_documents(self.data)
         self.finder.apply_freq_filter(self.freq_filter)
 
     def score_collocates(self):
-        # | Function for getting scores from finder object
         self.collocation_data = dict(self.finder.score_ngrams(self.measure))
 
     def find_term(self,term='',direction='all'):
         if direction == 'left':
-            return {k:v for k,v in self.collocation_data if k[0] == term}
+            return {k:v for k,v in self.collocation_data.items() if k[0] == term}
         elif direction == 'right':
-            return {k:v for k,v in self.collocation_data if k[1] == term}
+            return {k:v for k,v in self.collocation_data.items() if k[1] == term}
         elif direction == 'all':
-            return {k:v for k,v in self.collocation_data if any(term in e for e in k)}
+            return {k:v for k,v in self.collocation_data.items() if any(term in e for e in k)}
         else:
             pass
