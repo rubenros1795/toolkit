@@ -19,7 +19,7 @@ class Collocation():
         self.data = data 
         self.window = window 
         self.freq_filter = freq_filter
-        self.measure = measure
+        self.measure = eval(f"BigramAssocMeasures.{measure}")
 
     def find_collocates(self):
         BigramCollocationFinder.default_ws = self.window
