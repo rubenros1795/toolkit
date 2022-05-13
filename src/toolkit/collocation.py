@@ -28,8 +28,6 @@ class Collocation():
         self.BigramCollocationFinder.default_ws = self.window
         self.finder = self.BigramCollocationFinder.from_documents(self.data)
         self.finder.apply_freq_filter(self.freq_filter)
-
-    def score_collocates(self):
         self.collocation_data = dict(self.finder.score_ngrams(self.measure))
 
     def find_term(self,term='',direction='all'):

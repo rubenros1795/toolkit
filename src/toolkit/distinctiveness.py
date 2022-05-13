@@ -14,19 +14,19 @@ class Distinctiveness():
     Class for calculating log likelihood distinctiveness for text data.
     """
 
-    def __init__(self,dataframe,type_column,text_column):
+    def __init__(self,data,type_column='',text_column=''):
         """
-        dataframe (pd.DataFrame): dataframe with text data and metadata.
+        data (pd.data): data with text data and metadata.
         type_column (str): column that indicates the group for which distinctive terms should be calculated.
         text_column (str): column with text.
         """
         self.type_column = type_column
         self.text_column = text_column
 
-        if len(dataframe[type_column]) != len(dataframe[type_column].unique()):
-            self.data = dataframe[[type_column,text_column]].groupby([type_column]).agg({text_column: lambda x: " ".join(x)}).reset_index()
+        if len(data[type_column]) != len(data[type_column].unique()):
+            self.data = data[[type_column,text_column]].groupby([type_column]).agg({text_column: lambda x: " ".join(x)}).reset_index()
         else:
-            self.data = dataframe
+            self.data = data
 
     def fit_vectorizer(self,max_features=10000,ngram_range=(1,1)):
         """
@@ -44,7 +44,7 @@ class Distinctiveness():
         self.vectorized = self.vectorizer.fit_transform(self.data[self.text_column].tolist())
         self.all_words = np.array(self.vectorizer.get_feature_names())
         self.type_names = self.data[self.type_column].tolist()
-        self.vecdf = pd.DataFrame(self.vectorized.todense(), # the matrix we saw above is turned into a dataframe
+        self.vecdf = pd.data(self.vectorized.todense(), # the matrix we saw above is turned into a data
                                  columns=self.all_words,
                                  index =self.type_names
                                  )  
@@ -68,12 +68,12 @@ class Distinctiveness():
                 LL = 2 * (a * np.log(a / E1)) # the log likelihood equation
                 if (b > 0):
                     LL += 2 * b * np.log(b / E2)
-                loglikely.append((LL, self.all_words[word_id])) # add the log likelihood score to the end of a new dataframe
+                loglikely.append((LL, self.all_words[word_id])) # add the log likelihood score to the end of a new data
 
             loglikely = sorted(loglikely, reverse=True) # the loop hits this every time it cycles through all the words in one speaker. 
             lls.append(loglikely) # add on another speaker
-        self.lls_df = pd.DataFrame()
+        self.lls_df = pd.data()
         for c,i in enumerate(lls):
-            i = pd.DataFrame(i)
+            i = pd.data(i)
             i['type'] = self.type_names[c]
             self.lls_df = self.lls_df.append(i)

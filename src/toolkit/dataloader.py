@@ -10,7 +10,7 @@ class DataLoader():
     DataLoader class for loading tabular text data.
     """
 
-    def __init__(self,year_range=(1945,1964),text_column='lemm',data_path='',stopword_path='',load_text=True):
+    def __init__(self,year_range=(1945,1964),text_column='lemm',data_path='',stopword_path='',pos_path='',load_text=True):
         """
         Initialize class. 
 
@@ -26,21 +26,18 @@ class DataLoader():
         self.stopword_path = stopword_path
         self.load_text = load_text 
         self.stopwords = pd.read_csv(stopword_path,header=None).iloc[:,0].tolist()
-
-    def load_pos(self,pos_path=''):
-        """
-        Load Part-of-Speech Tags
-        pos_path (str): path to POS-tagged words in .json format.
-        """
-        with open(pos_path,'r') as f:
-            self.pos_dict = json.load(f)
-            self.pos_terms = set(self.pos_dict.keys())
+        self.pos_path = pos_path 
 
     def load(self,metadata='default'):
         """
         Load data.
         metadata (str/list): 'default' or custom list of metadata columns
         """
+        if self.pos_path != '':
+            with open(self.pos_path,'r') as f:
+                        self.pos_dict = json.load(f)
+                        self.pos_terms = set(self.pos_dict.keys())
+
         print('\t > loading data ...')
         metadata = ['speech_id','date','role','party-ref','member-ref','speaker'] if metadata == 'default' else metadata 
         columns = [self.text_column] + metadata if self.load_text == True else metadata
