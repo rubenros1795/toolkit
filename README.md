@@ -36,7 +36,7 @@ pip -e install setup.py
 | pos_path      | str     | Path to the ```.json``` file with Part-of-Speech tags linked to individual words. |
 | load_text     | boolean | Whether or not to load the text column.                      |
 
-The ````DataLoader``` class provides easy access to data. Run ```DataLoader.load()``` to load the data, and ```DataLoader.clean()```. The data is stored in ```Dataloader.data```.
+The ```DataLoader``` class provides easy access to data. Run ```DataLoader.load()``` to load the data, and ```DataLoader.clean()```. The data is stored in ```Dataloader.data```.
 
 ---
 
